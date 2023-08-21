@@ -1,0 +1,164 @@
+.bg-purple{
+	background-color: #990099;
+}
+.text-purple{
+	color: #990099;
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 72%;
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.pre_div{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+hr.pre{
+	border-top: 1px solid #fff;
+}
+.bg-white{
+	background-color: #fff;
+}
+.navbar{
+	padding: 0 ;
+	
+}
+.navbar-brand img {  
+	max-height: 100px;
+}
+.nav-link {
+  font-size: 18px;
+  color: #990099 !important;
+}
+.nav-link:hover{
+	color:#ffcc00 !important;
+}
+.dropdown-item{
+	background-color: #990099 !important;
+	color: #fff;
+}
+.dropdown-item:hover{
+	background-color: #fff !important;
+	color: #990099;
+}
+.navbar-collapse > ul{
+	margin-left: 20%;
+}
+.navbar-nav > li {
+  padding-left: 15px;
+  padding-right: 10px;
+}
+.nav-link{
+	font-size: 18px;
+	color: 	#990099 !important;
+}
+.nav-link:hover{
+	color: 	#ff80ff !important;
+}
+
+.mtop-10{
+	margin-top: 10%;
+}
+.text-orange{
+	color: 	 #ffcc00;
+}
+.btn_purple{
+	border: 1px solid #990099;
+  	border-radius: 5px;
+	line-height: 1.5;
+	font-size: 15px;
+	padding: 10px 20px;
+	color: #fff!important;
+	background-color: #990099; 
+	transition: ease-in;
+}
+.btn_purple:hover{
+	color: #990099!important;
+	background-color: #fff;
+	border: 1px solid #990099;
+}
+
+.hero-image {
+ background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("/frontend/assets/img/illustration-min.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.bg_phone {
+ background-image: linear-gradient(rgba(204, 0, 102, 0.9), rgba(204, 0, 102, 0.9)), url("/frontend/assets/img/woman-min.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.btn_reg{
+	border: 1px solid #ffcc00;
+  	border-radius: 5px;
+	line-height: 1.5;
+	font-size: 15px;
+	padding: 10px 20px;
+	color: #fff!important;
+	background-color: #ffcc00; 
+	transition: ease-in;
+}
+.btn_reg:hover{
+	color: #ffcc00!important;
+	background-color: #fff;
+	border: 1px solid #ffcc00;
+}
+
+.bg-footer {
+ background-image: linear-gradient(rgba(153, 0, 153, 0.7), rgba(153, 0, 153, 0.7)), url("/frontend/assets/img/iphone-min.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.bg-orange{
+	background-color: #ffcc00; 
+}
+.footera{
+	text-decoration: none;
+	color: 	#fff !important;
+	line-height: 2;
+}
+.footera:hover{
+	text-decoration: none;
+	color: 	#ffcc00 !important;
+}
+.icon-purple{
+	color: #990099; 
+	background-color: #fff; 
+}
+.icon-purple:hover{
+	background-color: #990099; 
+	color: #fff; 
+}
+@media (max-width: 992px) {
+	.navbar-brand img {  
+	max-height: 150px;
+	}
+	.bg-head{
+		background-image: linear-gradient(rgba(153, 0, 153, 0.7), rgba(153, 0, 153, 0.7)), url("/frontend/assets/img/Consulting.png");
+	  height: 100%;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  background-size: cover;
+	  position: relative;
+	}
+
+}
+@media (min-width: 992px) {
+	
+	.mleft-5{
+		margin-left: 5%;
+	}
+}

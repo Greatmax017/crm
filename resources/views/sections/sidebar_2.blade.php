@@ -1,0 +1,312 @@
+   <!-- BEGIN: Mobile Menu -->
+        <div class="mobile-menu md:hidden">
+            <div class="mobile-menu-bar">
+                <a href="" class="flex mr-auto">
+                    <img alt="Mobile VTUP lus" class="w-6" src="/img/core-img/logo.png">
+                </a>
+                <a href="javascript:;" id="mobile-menu-toggler"> <i data-feather="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
+            </div>
+            <ul class="border-t border-theme-24 py-5 hidden">
+                <li>
+                        <a href="javascript:;" class="menu">
+                            <div class="menu__icon"> <i data-feather="box"></i> </div>
+                            <div class="menu__title"> My Account <i data-feather="chevron-down" class="menu__sub-icon"></i> </div>
+                            </a>
+                        <ul class="">
+                            <li>
+                                <a href="/dashboard" class="menu">
+                                    <div class="menu__icon"> <i data-feather="home"></i> </div>
+                                    <div class="menu__title"> Dashboard  </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/add_money" class="menu">
+                                    <div class="menu__icon"> <i data-feather="plus"></i> </div>
+                                    <div class="menu__title"> Add Money </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/share_money" class="menu">
+                                    <div class="menu__icon"> <i data-feather="plus"></i> </div>
+                                    <div class="menu__title"> Share money </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/transaction_history" class="menu">
+                                    <div class="menu__icon"> <i data-feather="list"></i> </div>
+                                    <div class="menu__title"> All Transactions</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/referred_bonus" class="menu">
+                                    <div class="menu__icon"> <i data-feather="hash"></i> </div>
+                                    <div class="menu__title">Referral Earnings</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/profile" class="menu">
+                                    <div class="menu__icon"> <i data-feather="user"></i> </div>
+                                    <div class="menu__title">Profile</div>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                   <a href="/airtime" class="menu {{ Request::is('airtime') ? 'menu--active' : '' }}">
+                            <div class="menu__icon"> <i data-feather="phone"></i></div>
+                            <div class="menu__title"> Airtime Top Up </div>
+                        </a>
+                </li>
+                <li>
+                        <a href="javascript:;" class="menu {{ Request::is('data') ? 'menu--active' : '' }} ">
+                            <div class="menu__icon"> <i data-feather="globe"></i> </div>
+                            <div class="menu__title"> Data Bundle<i data-feather="chevron-down" class="menu__sub-icon"></i> </div>
+                            </a>
+                        <ul class="">
+                            <li>
+                                <a href="/mtn_data" class="menu">
+                                    <div class="menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="menu__title"> Mtn Data  </div>
+                                </a>
+                            </li>
+                            <!-- <li>
+                                <a href="/mtn_bulk_data" class="menu">
+                                    <div class="menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="menu__title"> Bulk Data </div>
+                                </a>
+                            </li> -->
+                            <li>
+                                <a href="/other_gsm_data" class="menu">
+                                    <div class="menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="menu__title"> Other GSM Data</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="menu">
+                                    <div class="menu__icon"> <i data-feather="globe"></i> </div>
+                                    <div class="menu__title">Broadband Data</div>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+                    </li>
+                    <li>
+                        <a href="/cable" class="menu {{ Request::is('cable') ? 'menu--active' : '' }}">
+                            <div class="menu__icon"> <i data-feather="tv"></i> </div>
+                            <div class="menu__title"> Cable TV </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/electricity" class="menu {{ Request::is('electricity') ? 'menu--active' : '' }}">
+                            <div class="menu__icon"> <i data-feather="circle"></i> </div>
+                            <div class="menu__title"> Electricity</div>
+                        </a>
+                    </li>
+                     <li>
+                        <a href="education" class="menu {{ Request::is('education') ? 'menu--active' : '' }}">
+                            <div class="menu__icon"> <i data-feather="book-open"></i> </div>
+                            <div class="menu__title"> Educatiion</div>
+                        </a>
+                    </li>
+                <li>
+                  <a href="javascript:;" data-toggle="modal" data-target="#delete-modal-preview" class=" menu button inline-block bg-theme-1 text-white">
+                      <div class="menu__icon"> <i data-feather="power"></i> </div>
+
+                      <div class="menu__title">Logout</div>
+                  </a>
+                </li>
+                @if(Auth::user()->isAdmin() || Auth::user()->isReader())
+                <!--admin-->
+                 <li>
+                    <a href="/admin/users" class="menu {{ Request::is('admin') ? 'menu--active' : '' }}">
+                        <div class="menu__icon"> <i data-feather="edit"></i> </div>
+                        <div class="menu__title"> Admin Panel </div>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </div>
+        <!-- END: Mobile Menu -->
+ <div class="flex">
+ <!-- BEGIN: Side Menu -->
+            <nav class="side-nav">
+                <a href="" class="intro-x flex items-center pl-5 pt-4">
+                    <img alt="Mobile VTU Pluss" class="w-6" src="img/core-img/logo.png">
+                    <span class="hidden xl:block text-white text-lg ml-3"> Mobile VTU <span class="font-medium">Plus</span> </span>
+                </a>
+                <div class="side-nav__devider my-6"></div>
+                <ul>
+                    <li>
+                        <a href="javascript:;" class="side-menu {{ Request::is('dashboard') ? 'side-menu--active' : '' }} ">
+                            <div class="side-menu__icon"> <i data-feather="home"></i> </div>
+                            <div class="side-menu__title"> My Account <i data-feather="chevron-down" class="side-menu__sub-icon"></i> </div>
+                            </a>
+                        <ul class="">
+                            <li>
+                                <a href="/dashboard" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="home"></i> </div>
+                                    <div class="side-menu__title"> Dashboard  </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/add_money" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus"></i> </div>
+                                    <div class="side-menu__title"> Add Money </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/share_money" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus"></i> </div>
+                                    <div class="side-menu__title"> Share  Money </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/transaction_history" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="list"></i> </div>
+                                    <div class="side-menu__title"> All Transactions</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/referred_bonus" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
+                                    <div class="side-menu__title">Referral Earnings</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/profile') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="user"></i> </div>
+                                    <div class="side-menu__title"> Profile</div>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a href="/airtime" class="side-menu {{ Request::is('airtime') ? 'side-menu--active' : '' }}">
+                            <div class="side-menu__icon"> <i data-feather="phone"></i></div>
+                            <div class="side-menu__title"> Airtime Top Up </div>
+                        </a>
+
+                    </li>
+                     <li>
+                        <a href="javascript:;" class="side-menu {{ Request::is('mtn_data', 'broadband', 'other_gsm_data' ) ? 'side-menu--active' : '' }} ">
+                            <div class="side-menu__icon"> <i data-feather="globe"></i> </div>
+                            <div class="side-menu__title"> Data Bundle<i data-feather="chevron-down" class="side-menu__sub-icon"></i> </div>
+                            </a>
+                        <ul class="">
+                            <li>
+                                <a href="/mtn_data" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title"> MTN Data  </div>
+                                </a>
+                            </li>
+                            <!-- <li>
+                                <a href="/mtn_bulk_data" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title"> Bulk Data </div>
+                                </a>
+                            </li> -->
+                            <li>
+                                <a href="/other_gsm_data" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title"> Other GSM Data</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/broadband" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="globe"></i> </div>
+                                    <div class="side-menu__title">Broadband Data</div>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+                    </li>
+                    <li>
+                        <a href="/cable" class="side-menu {{ Request::is('cable') ? 'side-menu--active' : '' }}">
+                            <div class="side-menu__icon"> <i data-feather="tv"></i> </div>
+                            <div class="side-menu__title"> Cable TV </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/electricity" class="side-menu {{ Request::is('electricity') ? 'side-menu--active' : '' }}">
+                            <div class="side-menu__icon"> <i data-feather="circle"></i> </div>
+                            <div class="side-menu__title"> Electricity</div>
+                        </a>
+                    </li>
+                     <li>
+                        <a href="/education" class="side-menu {{ Request::is('education') ? 'side-menu--active' : '' }}">
+                            <div class="side-menu__icon"> <i data-feather="book-open"></i> </div>
+                            <div class="side-menu__title"> Educatiion</div>
+                        </a>
+                    </li>
+
+                     <li>
+                        <!-- <a href="javascript:;" class="side-menu">
+                            <div class="side-menu__icon"> <i data-feather="power"></i> </div>
+                            <div class="side-menu__title"> Log Out </div>
+                        </a> -->
+                        <a href="javascript:;" data-toggle="modal" data-target="#delete-modal-preview" class=" side-menu button inline-block bg-theme-1 text-white">
+                            <div class="side-menu__icon"> <i data-feather="power"></i> </div>
+
+                            <div class="side-menu__title">Logout</div>
+                        </a>
+
+                    </li>
+                    	@if(Auth::user()->isAdmin() || Auth::user()->isReader())
+                    <li class="side-nav__devider my-6"></li>
+                    <li>
+                        <a href="#" class="side-menu {{ Request::is('admin') ? 'side-menu--active' : '' }} button inline-block bg-theme-1 text-white ">
+                            <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
+                            <div class="side-menu__title"> Admin Panel <i data-feather="chevron-down" class="side-menu__sub-icon"></i> </div>
+                        </a>
+                        <ul class="">
+                            <li>
+                                <a href="/admin/users" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title">Users  </div>
+                                </a>
+                            </li>
+                            <!-- <li>
+                                <a href="/mtn_bulk_data" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title"> Bulk Data </div>
+                                </a>
+                            </li> -->
+                            <li>
+                                <a href="/admin/transactions" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="plus-circle"></i> </div>
+                                    <div class="side-menu__title"> Transactions</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/products" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="globe"></i> </div>
+                                    <div class="side-menu__title">Products</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/users" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-feather="globe"></i> </div>
+                                    <div class="side-menu__title">Create Admin</div>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    @endif
+
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+              <div class="modal" id="delete-modal-preview"> <div class="modal__content"> <div class="p-5 text-center"> <i data-feather="x-circle" class="w-16 h-16 text-theme-6 mx-auto mt-3"></i> <div class="text-3xl mt-5">Are you sure?</div> <div class="text-gray-600 mt-2">Thanks for being our esteemed customer, are you sure you want to log-out now?</div> </div> <div class="px-5 pb-8 text-center">
+                <button type="button" data-dismiss="modal" class="button w-24 border text-gray-700 mr-1">Cancel</button>
+
+                 <a href="/logout"><button type="submit" class="button w-24 bg-theme-6 text-white">Logout</button></a>
+
+                </div> </div> </div>
+            <!-- END: Side Menu -->

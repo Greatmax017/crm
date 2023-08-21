@@ -1,0 +1,94 @@
+<?php $__env->startSection("custom_css"); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+<?php $__env->stopSection(); ?>
+ <?php if(session('error-status')): ?>
+        <div class="alert alert-danger alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <div class="container-fluid">
+                <center><b>Error:</b> <?php echo e(session('error-status'), false); ?></center>
+            </div>
+        </div>
+        <?php endif; ?>
+        <?php if(session('success-status')): ?>
+        <div class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <div class="container-fluid">
+                <center> <?php echo e(session('success-status'), false); ?></center>
+            </div>
+        </div>
+        <?php endif; ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="content">
+    <div class="container-fluid">
+        <div class="mb-0 d-flex justify-content-between align-items-center page-title">
+            <div class="h4"><i data-feather="file-text" class="icon-dual"></i>Referral Bonus</div>
+            <br>
+                              
+        </div>
+        
+        <div class="card mt-0">
+            <div class="card-header">
+                <div class="h5">Referral Bonus &#8358;<?php echo e(number_format($ref_bonus, 2), false); ?></div>
+                <div class="h5">Referred users <?php echo e($ref_count, false); ?></div>
+                  <form method="post" action="<?php echo e(url('/get_bonus'), false); ?>">
+                                    <?php echo csrf_field(); ?>
+                                    <button class="btn btn-sm btn-success" type="submit">Withdraw Bonus</button>
+                                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive table-data">
+                    <table id="transactionTable" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">Name</>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <tr>
+                            <td><?php echo e($m->name, false); ?></td>
+                            <td><?php echo e($m->email, false); ?></td>
+                            <td><?php echo e($m->phone, false); ?></td>
+                                    </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                
+                            
+                                <tr>
+                                        <td colspan="3"><center><i>You have not referred anyone. share your referral link to get referral bonus</i></center></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                   <p>Refferal Link:  <br>
+                                    <a href="<?php echo e(url('/register').'?ref='.Auth::user()->email, false); ?>" style="word-wrap:break-word;"><b><?php echo e(url('/register').'?ref='.Auth::user()->email, false); ?></b></a></p>
+                               
+                        </tbody>
+                    </table>
+                     <?php echo e($users->links(), false); ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection("javascript"); ?>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/backend/assets/build/js/intlTelInput.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#transactionTable').DataTable();
+        });
+
+    </script>
+ <?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

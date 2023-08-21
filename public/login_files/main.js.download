@@ -1,0 +1,1678 @@
+﻿
+
+
+
+var myApp = angular.module('app', ['ui.router', 'pascalprecht.translate', 'ngSanitize', 'rout', 'children', 'formly', 'formlyBootstrap', 'ui.bootstrap']);
+// define(['app'],function (myApp) {
+// 分页服务
+/**
+ * creare by pqs
+ * 2017.5.26
+ */
+myApp.run(function(){
+    // con
+
+})
+
+myApp.config(['$translateProvider', function ($translateProvider) {
+    var windowUrl = window.location.href;
+
+    if (windowUrl.indexOf('language=en') >= 0) {
+        var lang = window.localStorage.lang = 'en';
+    } else if (windowUrl.indexOf('language=cn') >= 0) {
+        var lang = window.localStorage.lang = 'zh';
+    } else if (windowUrl.indexOf('language=fr') >= 0) {
+        var lang = window.localStorage.lang = 'fr';
+    } else if (windowUrl.indexOf('language=es') >= 0) {
+        var lang = window.localStorage.lang = 'es';
+    } else if (windowUrl.indexOf('language=de') >= 0) {
+        var lang = window.localStorage.lang = 'de';
+    } else if (window.localStorage.lang) {
+        var lang = window.localStorage.lang;
+    } else {
+        var lang = window.localStorage.lang = 'en';
+    }
+
+    $translateProvider.useStaticFilesLoader({
+        files: [{
+            prefix: '/script/langs/',
+            suffix: '.json'
+        }]
+    });
+    window.localStorage.lang = lang;
+    $translateProvider.preferredLanguage(lang);
+
+    //new view color theme
+    //window.localStorage.mode = dark;
+}]);
+myApp.factory('PagesService', ['$http', function ($http) {
+    var list = function (data, PerPage) {
+        //分页 pages(存页数)pagedata(总数据) temdata(利用一个数组存储过滤过的数据)  currentPage(当前页数) total(总条数) PerPage(每页显示数据)
+        var pages = { 'pages': [], 'pagedata': [], 'temdata': [], 'pagenum': '', 'currentPage': 0, 'total': '' };
+        pages.pagedata = data;
+        pages.PerPage = PerPage;
+        pages.total = total(data);
+        var newpage = paging(pages, data);
+        return newpage;
+    };
+    
+    var paging = function (t, d) {
+        t.pages = [];
+        t.temdata = [];
+        t.pagedata = d;
+        var l = t.total;//记录总数
+        var maxPage = (l % t.PerPage == 0) ? l / t.PerPage : (Math.floor(l / t.PerPage) + 1);//计算要分的页数
+        for (var i = 0; i <= maxPage - 1; i++) {
+            t.temdata[i] = d.splice(0, t.PerPage)//开始分页。下标等于页数-1
+            t.pages.push(i + 1);//重新造页数
+        }
+        t.pagenum = maxPage;
+        return t;
+    };
+    //参数 total 数据总数
+    var pages = function (total, pagesize, currentPage) {
+        var pages = { 'currentPage': 1, 'total': total, 'totalPage': '', 'pageSize': '', 'pages': [], 'endPage': '' };
+        pages.totalPage = Math.ceil(total / pagesize);
+        pages.pageSize = pagesize;
+        pages.currentPage = currentPage ? currentPage : pages.currentPage;
+        pages.endPage = pages.totalPage;
+        //判断如果当前页面小于5页让其全部显示
+        if (pages.totalPage <= 5) {
+            for (var i = 0; i < pages.totalPage; i++) {
+                pages.pages.push(i + 1);
+            }
+        } else {
+            //生成数字链接
+            //判断当前序号是否超过一半
+            var t = pages.totalPage / 2;
+            if (pages.currentPage <= t) {
+                //前一半处理 判断是否大于3
+                if (pages.currentPage < 3) {
+                    pages.pages = [1, 2, 3, 4, '...', pages.totalPage];
+                    //判断 len是否<所有页数-2
+                } else {
+                    pages.pages = [1, pages.currentPage - 1, pages.currentPage, parseInt(pages.currentPage) + 1, '...', pages.totalPage];
+                }
+
+            } else {
+                if (pages.currentPage <= pages.totalPage - 2) {
+                    //小于总页数-2
+                    pages.pages = [1, '...', pages.currentPage - 1, pages.currentPage, parseInt(pages.currentPage) + 1, pages.totalPage];
+                } else {
+                    pages.pages = [1, '...', pages.totalPage - 3, pages.totalPage - 2, pages.totalPage - 1, pages.totalPage];
+                }
+            }
+        }
+        return pages;
+
+    };
+    //获取总数
+    var total = function (t) {
+        return t.length;
+    };
+    var getStartTime = function () {
+        var time = commonDate();
+        var str = time.y + '-' + time.m + '-' + time.d + ' ' + time.h + ':' + time.i + ':' + time.s;
+        return str;
+    };
+    var getEndTime = function () {
+        var time = commonDate();
+        var str = time.y + '-' + time.m + '-' + (time.d + 1) + ' ' + time.h + ':' + time.i + ':' + time.s;
+        return str;
+    };
+    var getCurrentTime = function (getime) {
+        var time = commonDate(getime);
+        if (parseInt(time.d) >= 9) {
+            time.d = parseInt(time.d) + 1;
+        } else {
+            time.d = '0' + (parseInt(time.d) + 1);
+        }
+        var str = time.y + '-' + time.m + '-' + (time.d);
+        return str;
+    }
+    var getTimeDetail = function (getime) {
+        var time = commonDate(getime);
+        // console.log(time);
+        if (parseInt(time.d) >= 9) {
+            time.d = time.d + 1;
+        } else {
+            time.d = '0' + (parseInt(time.d) + 1);
+        }
+        var str = time.y + '-' + time.m + '-' + (time.d) + ' ' + time.h + ':' + time.i + ':' + time.s;
+        return str;
+    }
+    var commonDate = function (getime) {
+        var time = { 'y': '', 'm': '', 'd': '', 'h': '', 'i': '', 's': '' };
+        if (getime) {
+            var date = new Date(parseInt(getime));
+        } else {
+            var date = new Date();
+        }
+        var y = date.getFullYear();    //获取完整的年份(4位,1970-????)
+        var m = date.getMonth() + 1;       //获取当前月份(0-11,0代表1月)
+        var d = date.getDate();        //获取当前日(1-31)
+        var h = date.getHours();       //获取当前小时数(0-23)
+        var i = date.getMinutes();     //获取当前分钟数(0-59)
+        var s = date.getSeconds();     //获取当前秒数(0-59)
+        time.y = y;
+        time.m = m >= 10 ? m : '0' + m;
+        time.d = d >= 10 ? d : '0' + d;
+        time.h = h >= 10 ? h : '0' + h;
+        time.i = i >= 10 ? i : '0' + i;
+        time.s = s >= 10 ? s : '0' + s;
+        return time;
+    };
+    return {
+        list: function (page, size) {
+            return list(page, size);
+        },
+        pages: function (total, pagesize, currentPage) {
+            return pages(total, pagesize, currentPage);
+        },
+        getStartTime: function () {
+            return getStartTime();
+        },
+        getEndTime: function () {
+            return getEndTime();
+        },
+        getCurrentTime: function (getime) {
+            return getCurrentTime(getime);
+        },
+        getTimeDetail: function (getime) {
+            return getTimeDetail(getime);
+        }
+    };
+}]);
+myApp.factory('fieldService', ['$rootScope', function ($rootScope) {
+    //自定义字段
+    var getFields = function (formIds, forms, searchableFields) {//formId在FieldFormEnum添加
+        $rootScope.matrixPost(true, "/WebLogin/GetEnableFieldsByForms", { formIds: formIds }, function (res) {
+            if (res.Success) {
+                if (searchableFields) {
+                    searchableFields.length = 0;
+                }
+                // forms.alldata = res.Data;
+                $.each(res.Data, function (i, n) {
+                    forms[i] = getFieldForm(n);
+                    if (searchableFields) {
+                        $.each(fields, function (i2, field) {
+                            if (field.Searchable) {
+                                searchableFields.push(field);
+                            }
+                        });
+                    }
+                });
+            } else {
+                alert(res.Message);
+            }
+        });
+    }
+
+    var getDynamicPropertiesValue = function (dynamicPropertiesString, fieldData) {
+        // console.log(typeof dynamicPropertiesString);
+        if (typeof dynamicPropertiesString != 'object') {
+            var dynamicProperties = JSON.parse(dynamicPropertiesString);
+        }
+        return dynamicProperties ? dynamicProperties[getKey(fieldData)] : undefined;
+    };
+    //设置字段Key
+    var getKey = function (fieldData) {
+        return "f" + fieldData.FormId + "-" + fieldData.FieldId;
+    };
+    //设置字段选项
+    var setOptionForField = function (field2, fieldData2, isMulti) {
+        var defaultOptions = $.grep(fieldData2.FieldOptions, function (fieldOption) {
+            return fieldOption.IsDefault;
+        });
+        if (defaultOptions.length) {
+            var defaultValue = defaultOptions[0].Display;
+            field2.defaultValue = isMulti ? [defaultValue] : defaultValue;
+        }
+        field2.templateOptions.options = $.map(fieldData2.FieldOptions, function (fieldOption) {
+            return { name: fieldOption.Display, value: fieldOption.Display };
+        });
+    };
+    //获取字段表单
+    //获取字段表单
+    var getFieldForm = function (fieldsData) {
+        var fields = new Array();
+        var allkey = new Array();
+        angular.forEach(fieldsData, function (fieldData) {
+            if (!fieldData.Enable) {
+                return;
+            }
+            allkey.push('f2-' + fieldData.FieldId);
+            var field = {
+                key: getKey(fieldData),
+                className: "col-xs-" + fieldData.Columns * 6,//如有必要根据屏幕大小判断
+                ngModelAttrs: {
+                    dataRuleRequired: { attribute: 'data-rule-required' },
+                    dataMsgRequired: { attribute: 'data-msg-required' }
+                },
+                templateOptions: {
+                    label: fieldData.Display,
+                    //required: fieldData.Required,
+                    dataRuleRequired: fieldData.Required,
+                    dataMsgRequired: "{{100004|translate}}"
+                },
+                validation: {
+                    show: true
+                }
+                //, 暂时不知道Readonly在哪里需要
+                //expressionProperties: {
+                //    "templateOptions.disabled": "model.Readonly"
+                //}
+            };
+
+            switch (fieldData.FieldType) {
+                case 1: //Text
+                    field.type = "input";
+                    field.templateOptions.type = "text";
+                    break;
+                case 2://Textarea
+                    field.type = "textarea";
+                    break;
+                case 3://Image
+                    field.type = "customUpload";
+                    break;
+                //case 4://File
+                //    field.type = "input";//TODO: review
+                //    break;
+                case 5://Radio
+                    field.type = "radio";
+                    setOptionForField(field, fieldData, false);
+                    //field.templateOptions.inline = true;
+                    break;
+                case 6://Checkbox
+                    field.type = "multiCheckbox";
+                    setOptionForField(field, fieldData, true);
+                    //field.templateOptions.inline = true;
+                    break;
+                case 7://Select
+                    field.type = "select";
+                    setOptionForField(field, fieldData, false);
+                    break;
+                case 8://Integer
+                    field.type = "input";
+                    field.ngModelAttrs.dataRuleInteger = { attribute: 'data-rule-integer' };
+                    field.ngModelAttrs.dataMsgInteger = { attribute: 'data-msg-integer' };
+                    field.templateOptions.dataRuleInteger = true;
+                    field.templateOptions.dataMsgInteger = "{{100000|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                case 9://Money
+                    field.type = "input";
+                    field.ngModelAttrs.dataRuleMonneys = { attribute: 'data-rule-monneys' };
+                    field.ngModelAttrs.dataMsgMonneys = { attribute: 'data-msg-monneys' };
+                    field.templateOptions.dataRuleMonneys = true;
+                    field.templateOptions.dataMsgMonneys = "{{100001|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                case 10://Date
+                    field.type = "datepicker";
+                    field.templateOptions.type = "text";
+                    break;
+                case 11://City
+                    field.type = "input";
+                    field.templateOptions.type = "text";
+                    //TODO: review
+                    break;
+                case 12://Phone
+                    field.type = "input";
+                    field.ngModelAttrs.dataRulePhonemobile = { attribute: 'data-rule-phonemobile' };
+                    field.ngModelAttrs.dataMsgPhonemobile = { attribute: 'data-msg-phonemobile' };
+                    field.templateOptions.dataRulePhonemobile = true;
+                    field.templateOptions.dataMsgPhonemobile = "{{70021|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                case 13://Datestring
+                    field.type = "input";
+                    //field.templateOptions.type = "date";
+                    field.ngModelAttrs.dataRuleDate = { attribute: 'data-rule-date' };
+                    field.ngModelAttrs.dataMsgDate = { attribute: 'data-msg-date' };
+                    field.templateOptions.dataRuleDate = true;
+                    field.templateOptions.dataMsgDate = "{{100002|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                case 14://Country
+                    field.type = "select";
+                    //field.templateOptions.options = $.map($scope.Country, function (country) {
+                    //    return { name: country, value: country };
+                    //});
+                    if ($rootScope.Language == 'en') {
+                        field.templateOptions.options = [
+                            { name: "China", value: "China" },
+                            { name: "USA", value: "USA" },
+                            { name: "Canada", value: "Canada" },
+                            { name: "France", value: "France" },
+                            { name: "Japan", value: "Japan" },
+                            { name: "Singapore", value: "Singapore" },
+                            { name: "United Kingdom", value: "United Kingdom" },
+                            { name: "Vietnam", value: "Vietnam" },
+                            { name: "Korea", value: "Korea" },
+                            { name: "Malaysia", value: "Malaysia" },
+                            { name: "Taiwan", value: "Taiwan" },
+                            { name: "Thailand", value: "Thailand" },
+                            { name: "Germany", value: "Germany" },
+                            { name: "Greece", value: "Greece" },
+                            { name: "Spain", value: "Spain" },
+                            { name: "Italy", value: "Italy" },
+                            { name: "Egypt", value: "Egypt" },
+                            { name: "Netherlands", value: "Netherlands" },
+                            { name: "Switzerland", value: "Switzerland" },
+                            { name: "Sweden", value: "Sweden" },
+                            { name: "Argentina", value: "Argentina" },
+                            { name: "Turkey", value: "Turkey" },
+                            { name: "Brazil", value: "Brazil" },
+                            { name: "Colombia", value: "Colombia" },
+                            { name: "Mexico", value: "Mexico" },
+                            { name: "Panama", value: "Panama" },
+                            { name: "Peru", value: "Peru" }
+                        ];
+                    } else {
+                        field.templateOptions.options =
+                            [
+                                { name: "中国", value: "China" },
+                                { name: "美国", value: "USA" },
+                                { name: "加拿大", value: "Canada" },
+                                { name: "法国", value: "France" },
+                                { name: "日本", value: "Japan" },
+                                { name: "新加坡", value: "Singapore" },
+                                { name: "英国", value: "United Kingdom" },
+                                { name: "越南", value: "Vietnam" },
+                                { name: "韩国", value: "Korea" },
+                                { name: "马来西亚", value: "Malaysia" },
+                                { name: "台湾", value: "Taiwan" },
+                                { name: "泰国", value: "Thailand" },
+                                { name: "德国", value: "Germany" },
+                                { name: "希腊", value: "Greece" },
+                                { name: "西班牙", value: "Spain" },
+                                { name: "意大利", value: "Italy" },
+                                { name: "埃及", value: "Egypt" },
+                                { name: "荷兰", value: "Netherlands" },
+                                { name: "瑞士", value: "Switzerland" },
+                                { name: "瑞典", value: "Sweden" },
+                                { name: "阿根廷", value: "Argentina" },
+                                { name: "土耳其", value: "Turkey" },
+                                { name: "巴西", value: "Brazil" },
+                                { name: "哥伦比亚", value: "Colombia" },
+                                { name: "墨西哥", value: "Mexico" },
+                                { name: "巴拿马", value: "Panama" },
+                                { name: "秘鲁", value: "Peru" }
+                            ];
+                    }
+                    break;
+                case 15://Password
+                    field.type = "input";
+                    field.templateOptions.type = "password";
+                    break;
+                case 16://Email
+                    field.type = "input";
+                    //field.templateOptions.type = "email";
+                    field.ngModelAttrs.dataRuleEmail = { attribute: 'data-rule-email' };
+                    field.ngModelAttrs.dataMsgEmail = { attribute: 'data-msg-email' };
+                    field.templateOptions.dataRuleEmail = true;
+                    field.templateOptions.dataMsgEmail = "{{70023|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                case 17://Number
+                    field.type = "input";
+                    //field.templateOptions.type = "number";
+                    field.ngModelAttrs.dataRuleNumber = { attribute: 'data-rule-number' };
+                    field.ngModelAttrs.dataMsgNumber = { attribute: 'data-msg-number' };
+                    field.templateOptions.dataRuleNumber = true;
+                    field.templateOptions.dataMsgNumber = "{{100003|translate}}";
+                    field.templateOptions.type = "text";
+                    break;
+                default:
+            }
+            fields.push(field);
+        });
+
+        fields = [{ className: 'row', fieldGroup: fields }];
+
+        return { Model: {}, Options: { 'key': allkey }, Fields: fields };
+
+
+    };
+
+    return {
+        formIds: {//from FieldFormEnum
+            PersonalInformation: 2,
+            CompanyInformation: 4
+        },
+        getDynamicPropertiesValue: function (dynamicPropertiesString, fieldData) {
+            return getDynamicPropertiesValue(dynamicPropertiesString, fieldData);
+        },
+        getFields: function (formIds, forms, searchableFields) {
+            return getFields(formIds, forms, searchableFields);
+        }
+    };
+}]);
+// myApp.config(['$translateProvider', function ($translateProvider) {
+//     var lang = window.localStorage.lang || 'zh';
+//     $translateProvider.useStaticFilesLoader({
+//         files:[{
+//             prefix: '/script/langs/',
+//             suffix: '.json'
+//         }]
+//     });
+//     window.localStorage.lang = lang;
+//     $translateProvider.preferredLanguage(lang);
+// }]);
+myApp.constant('constant_UserName', '');
+myApp.controller("mainController", ['$scope', '$http', '$location', '$timeout', '$state', '$stateParams', '$rootScope', '$anchorScroll', '$translate', function ($scope, $http, $location, $timeout, $state, $stateParams, $rootScope, $anchorScroll, $translate) {
+    //错误提示!
+    $rootScope.message = $scope.message = {
+        'en': {
+            'success': 'Success', 'loginOut': 'Login is invalid,please login again', 'noData': 'No data found', 'getError': 'Get data failed', 'Email': 'Sent successfully',
+            'register': 'success,please sign in', 'imgtype': 'Please upload jpg, png, jpegformat images', 'imgSize': 'Image can not exceed 3M at maximum',
+            'vaild': 'The form is out of order', 'demosuccess': 'CitiLink will contact you soon', 'regiserror': 'failed to register'
+        },
+        'zh': {
+            'success': '成功', 'loginOut': '登录失效,请重新登录!', 'noData': '没有找到数据！', 'getError': '获取数据失败', 'Email': '发送成功',
+            'register': '注册成功,请登录', 'imgtype': '请上传jpg、png、jpeg格式的图片', 'imgSize': '图片最大不能超过3M', 'vaild': '表单有误',
+            'demosuccess': '成功，citilink将会联系你', 'regiserror': '注册失败'
+        }
+
+    };
+    $scope.getRates= function(val,date){
+        if(val){
+            var url = '/MyInfo/GetExchangeRateByLater';
+        }else{
+            // url = '/MyInfo/GetExchangeRate';
+            url = '/MyInfo/GetExchangeRateByPay';
+        }
+        var money = $(val.target).attr('data-money');
+        $scope.matrixPost(false, url, '', function (res) {
+            // alert('密码错误');
+            if (res.Success) {
+                date.Rate = res.Data;
+                // console.log();
+                // change(money, res.Data);
+            } else {
+                alert('获取数据失败，请刷新或联系客服');
+            }
+        });
+    }
+    $scope.Splitnumbers = function(val){
+        var valus = $(val.target).val();
+        valus = valus.replace(/^\./g, "").replace(/[^\d.]/g, "").replace(/\.{2,}/g, ".").replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+        $(val.target).val(valus);
+    }
+    $scope.SplitnumbersIe = function(val,data){
+        var valus = $(val.target).val();
+        valus = valus.replace(/^\./g, "").replace(/[^\d.]/g, "").replace(/\.{2,}/g, ".").replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+        $(val.target).val(valus);
+        if(valus==''){
+            data.CNYmoney ='';
+            data.USDmoney ='';
+            return false;
+        }
+        var isdeposit = $(val.target).attr('isdeposit');
+        // console.log('isdeposit'+isdeposit);
+        var money = $(val.target).attr('data-money');
+        // console.log('money'+money);
+        change(money,data.Rate);
+        function change(type, Rate) {
+            // console.log(data);
+            switch (type) {
+                case 'USDmoney':
+                    
+                        if(data.USDmoney){
+                            data.CNYmoney = (parseFloat(data.USDmoney)*parseFloat(Rate)).toFixed(2);
+                        }  
+                   
+                    break;
+                case 'CNYmoney':
+                
+                        if(data.CNYmoney){
+                            data.USDmoney = (parseFloat(data.CNYmoney)/parseFloat(Rate)).toFixed(2);
+                        }
+                     
+                    break;
+            }
+        }
+    }
+    $scope.CurrencyType= '';//货币种类
+    if(!!window.ActiveXObject || "ActiveXObject" in window){
+        $scope.Imie = 'ie';
+    }else{
+        $scope.Imie = 'noie';
+    };
+    $scope.GetMone= function(val,data){
+        // var data = scope.chrData;
+        var isdeposit = $(val.target).parent();
+        // console.log(isdeposit);
+        function GetRate() {
+            if(isdeposit){
+                var url = '/MyInfo/GetExchangeRateByLater';
+            }else{
+                url = '/MyInfo/GetExchangeRate';
+            }
+            var money = $(myvalue).attr('data-money');
+            scope.matrixPost(false, url, '', function (res) {
+                // alert('密码错误');
+                if (res.Success) {
+                    data.Rate = res.Data;
+                    // change(money, res.Data);
+                } else {
+                    alert('获取数据失败，请刷新或联系客服');
+                }
+            });
+        };
+        // console.log();
+        // GetRate();
+        $(myvalue).on('input', function () {
+            console.log('input');
+            if (!data.Rate) {
+                GetRate();
+            }
+            var money = $(myvalue).attr('data-money');
+            // GetRate();
+            change(money,data.Rate);
+        })
+        function change(type, Rate) {
+            switch (type) {
+                case 'USDmoney':
+                    
+                        if(data.USDmoney){
+                            data.CNYmoney = (parseFloat(data.USDmoney)*parseFloat(Rate)).toFixed(2);
+                        }  
+                   
+                    break;
+                case 'CNYmoney':
+                
+                        if(data.CNYmoney){
+                            data.USDmoney = (parseFloat(data.CNYmoney)/parseFloat(Rate)).toFixed(2);
+                        }
+                     
+                    break;
+            }
+            // scope.$apply();
+            // scope.$digest();
+            console.log(data);
+        }
+    }
+    //true：IE    false：非IE
+    // $('body').removeClass('bg-black');
+    // console.log('dfd');
+    $scope.inputSapceTrim=function(e,this_temp)
+    {
+        function Trim(str,is_global)
+        {
+            var result;
+            result = str.replace(/(^\s+)|(\s+$)/g,"");
+            if(is_global.toLowerCase()=="g")
+            {
+                result = result.replace(/\s/g,"");
+            }
+            return result;
+        }
+        this_temp = Trim(this_temp,"g");
+        console.log(e);
+        // debugger
+        var keynum = window.event?e.keyCode:e.which;
+        if(keynum == 32){
+            return false;
+        }
+        return true;
+    }
+    // $scope.matrixPost(true, "/WebBrand/GetSiteInfo", params, function (res) {})
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://103.86.83.12:8012';//线上环境
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://api.citilinkmarkets.com';//线上环境
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://192.168.3.198:8012/';//测试环境
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://api.simplefxwork.com/';//测试环境
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://192.168.3.203:8012/'
+    // $rootScope.SimpleUrl=$scope.SimpleUrl = 'http://192.168.3.199:8055'
+    
+    //$rootScope.SimpleUrl=$scope.SimpleUrl = 'http://api.ogfx.com.au/';//og正式环境
+    //$rootScope.SimpleUrl = $scope.SimpleUrl = 'http://api.citilinkmarkets.com';//内部测试
+    $rootScope.SimpleUrl = $scope.SimpleUrl = 'https://api.neptunefx.com.au';
+    $scope.IbLogin = '';//ib后台登录地址
+    // $scope.CompLoginUrl='http://www.baidu.com';//机构注册成功后登录地址
+    //网站中英文切换
+
+
+    $scope.switching = function (lang) {
+        var wu = window.location.href;
+        var lanhus = 'language='+(lang=='en'?'en':'cn');
+        if(wu.indexOf('language=cn')>=0 || wu.indexOf('language=en')>=0){
+         
+            wu = wu.replace(/language=cn/g,lanhus);
+            wu = wu.replace(/language=en/g,lanhus)
+        }
+        window.location.href = wu; 
+        $translate.use(lang);
+        window.localStorage.lang = lang;
+        window.location.reload();
+    };
+    $scope.phone = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i);
+    if (!$scope.phone) {
+        // window._cvd = [];
+        // _cvd.push(['entry', 'https://cvd.xiaoduotech.com/?src=447&channel_id=895&key=59c7cf2c7419a6b8fb3a7c9e77e4d794d4bcfb649795653263e974c1c19a2b5e']);
+        // (function () {
+        //     var cvd = document.createElement('script');
+        //     cvd.type = 'text/javascript';
+        //     cvd.async = true;
+        //     cvd.src = 'https://cvd.xiaoduoai.com/sdk/sdk.min.js?src=447&key=59c7cf2c7419a6b8fb3a7c9e77e4d794d4bcfb649795653263e974c1c19a2b5e&channel_id=895';
+        //     var s = document.getElementsByTagName('script')[0];
+        //     s.parentNode.insertBefore(cvd, s);
+        // })();
+    }
+    $scope.loading_min = false;
+    $rootScope.loading = $scope.loading;
+    // console.log($translate.use());
+    $rootScope.Language = $scope.Language = window.localStorage.lang || $translate.use();
+    // console.log($scope.Language);
+    $scope.goThis = function (type) {
+        if ($('#' + type).length > 0) {
+            var top = $('#' + type).offset().top - 90;
+            $('html,body').animate({
+                scrollTop: top
+            }, 200)
+        }
+        // console.log($('#'+type).offset().top);
+    }
+    //封装的http
+    $rootScope.matrixPost = $scope.matrixPost = function (loading, url, params, success, error) {
+        if (loading) {
+            $scope.loading = true;
+        }
+        var _model = params;
+        $http({
+            url: $scope.SimpleUrl + "/IBWebApi" + url,
+            method: "post",
+            type: "json",
+            headers: {
+                'Authorization': sessionStorage.getItem('token'),
+                'Content-Language': $scope.Language
+            },
+            data: _model
+        }).success(function (res) {
+            $scope.loading = false;
+            success(res);
+        }).error(function (res) {
+            $scope.loading = false;
+            if (res) {
+                alert(res || res.Msg);
+            }
+            if (res && res == "用户登录失效,请重新登录") {
+                $scope.judgeToken();
+            } else {
+                alert(res);
+            }
+        });
+    };
+    // $scope.matrixGet = function (loading, url, params, success, error) {
+    //     if (loading) {
+    //         $scope.Loading = true;
+    //     };
+    //     var data = "";
+    //     if (isJson(params)) {
+    //         var i = 0;
+    //         for (key in params) {
+    //             if (i == 0) {
+    //                 data += "?" + key + "=" + params[key];
+    //             } else {
+    //                 data += "&" + key + "=" + params[key];
+    //             }
+    //             i++;
+    //         }
+    //     } else {
+    //         data = params
+    //     };
+    //     $http({
+    //         url: "http://1505.supwin.com:10085" + url + data,
+    //         method: "get",
+    //         headers: {
+    //             'Authorization': $scope.user.tokenType + " " + $scope.user.token,
+    //         },
+    //     }).success(function (res) {
+    //         if (loading) {
+    //             $scope.Loading = false;
+    //         };
+    //         success(res);
+    //     }).error(function (res) {
+    //         $scope.Loading = false;
+    //         if (res) {
+    //             $scope.webToast(res || res.Msg);
+    //         }
+    //         if (res && res == "用户登录失效,请重新登录") {
+    //             $scope.judgeToken();
+    //         } else {
+    //             error(res);
+    //         }
+    //     })
+    // };
+    $rootScope.$on('$locationChangeSuccess', gotop);
+    function gotop() {
+        $anchorScroll();
+        if ($stateParams.type) {
+            var type = $stateParams.type;
+            // console.log($stateParams.type);
+            $scope.goThis(type);
+        }
+    }
+    $scope.user = {
+        isLogin: JSON.parse(sessionStorage.getItem("isLogin")) || false,
+        token: sessionStorage.getItem("token") || "",
+        user: sessionStorage.getItem("user") || ""
+    };
+    $scope.judgeLogin = function () {
+        // console.log('dsf');
+        if (!$scope.user.isLogin) {
+            $location.path("/login");
+        }
+    };
+    $scope.judgeToken = function () {
+        var url = window.location.hash;
+        localStorage.setItem("link-page", url);
+        alert($scope.message[$scope.Language].loginOut);
+        $timeout(function () {
+            $scope.loginOut();
+        }, 1000)
+    };
+    //清除session并进入登录界面
+    $scope.clearSession = function () {
+        $scope.user.isLogin = false;
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('isLogin');
+        $scope.userInfo = '';
+        $location.path("/login");
+        alert($scope.message[$scope.Language].loginOut);
+    };
+    $scope.out = function () {
+        // console.log($scope.user.token);
+        $scope.matrixPost(true, "/WebLogin/LoginOut", '', function (res) {
+            // if (res.success) {
+            $scope.user.isLogin = false;
+            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('isLogin');
+            if ($scope.Language == 'en') {
+                alert("Login out success");
+            } else {
+                alert("退出成功");
+            }
+            $location.path("/login");
+            // }else{
+            //     alert("退出失败");
+            // }
+        })
+    };
+    $scope.LogoInfo = { 'Logo': '', 'Icon': '' };
+    //获取站点信息
+    $scope.getLogo = function () {
+        $(function () {
+            $scope.matrixPost(false, "/WebBrand/GetSiteInfo", '', function (res) {
+                if (res.Success) {
+                    $scope.LogoInfo = res.Data;
+                    $('.shortcut').attr('href', $scope.SimpleUrl + $scope.LogoInfo.SiteIcon);
+                    $('.diy-title').text($scope.LogoInfo.SiteName);
+                } else {
+                    alert(res.Message);
+                }
+            })
+        })
+    }
+    $scope.getLogo();
+    $scope.$on('$viewContentLoaded', function () {
+        // console.log('加载完毕');
+        $timeout(function () {
+            $scope.uivewLoad = 'loaded';
+        }, 300);
+    });
+    //点击联系在线客服
+    $scope.contactus = function () {
+        var src = 'https://cvd.xiaoduotech.com/?src=447&channel_id=895&key=59c7cf2c7419a6b8fb3a7c9e77e4d794d4bcfb649795653263e974c1c19a2b5e';
+        var str = "<div class='cont-us' style=''><iframe id='iframe' src='" + src + "'></iframe></div>";
+        $('body').append(str);
+        $('.cont-us').on('click', function () {
+            // console.log('remove');
+            if ($('.cont-us').length > 0) {
+                $('body .cont-us').remove();
+            }
+        });
+    }
+    $scope.SiteLogo = function () {
+        // console.log('sheh');
+        var img = 'background-image:url(sss);';
+        var data = {
+            'background': img
+        }
+        // var data ='fff';
+        return data;
+    }
+}]);
+//交易软件控制器
+myApp.controller("softwareController", ['$scope', '$stateParams', function ($scope, $stateParams) {
+    $scope.NewsData = { 'News': '', 'Affiches': '', 'stateparems': $stateParams.id };
+    // 获取新闻接口
+    $scope.getNews = function () {
+        $scope.loading_min = true;
+        $scope.matrixPost(false, "/WebArticle/GetHomeData", '', function (res) {
+            if (res.Success) {
+                $scope.NewsData.News = res.Data.News;
+                $scope.NewsData.Affiches = res.Data.Affiches;
+            } else {
+                alert($scope.message[$scope.Language].getError);
+            }
+            $scope.loading_min = false;
+        })
+    }
+    // $scope.moreNews = function(type){
+    //     $state.go('moreNews',{type:1});
+    // }
+    $scope.getNews();
+    // $scope.$broadcast('newdetail',$scope.NewsData);
+}])
+//新闻详情页控制器
+myApp.controller("newsdetailController", ['PagesService', '$scope', '$stateParams', function (PagesService, $scope, $stateParams) {
+    $scope.matrixPost(true, "/WebArticle/GetArticle", { 'id': $stateParams.id }, function (res) {
+        if (res.Success) {
+            $scope.newsdetail = res.Data;
+
+            // $scope.newsdetail.UpdateTime=$scope.newsdetail.UpdateTime.toString().replace(/\/Date\(([-]?\d+)\)\//gi, "$1");
+            // $scope.newsdetail.UpdateTime = PagesService.getCurrentTime($scope.newsdetail.UpdateTime);
+            // console.log($scope.newsdetail.UpdateTime);
+            // $scope.newsdetail.UpdateTime =$scope.newsdetail.UpdateTime.replace('/','');
+        } else {
+            alert(res.Message);
+        }
+    });
+}]);
+//更多新闻控制器
+myApp.controller("moreNewsController", ['$scope', '$timeout', '$stateParams', 'PagesService', function ($scope, $timeout, $stateParams, PagesService) {
+    // console.log($stateParams.type);
+    $scope.pageData = '';
+    $scope.param = { 'type': parseInt($stateParams.type), 'pageIndex': 1, 'pageSize': 10 };
+    $scope.getNews = function () {
+        $scope.matrixPost(true, "/WebArticle/GetPageData", $scope.param, function (res) {
+            if (res.Success) {
+                $scope.moreNews = res.Data.PageData;
+                //页码
+                $scope.pageData = PagesService.pages(res.Data.TotalCount, $scope.param.pageSize, $scope.param.pageIndex);
+                // console.log($scope.pageData);
+            } else {
+                alert($scope.message[$scope.Language].getError);
+            }
+        });
+    };
+    $scope.getNews();
+    //分页
+    $scope.jumpPage = function (pageIndex, type) {
+        // console.log(pageIndex)
+        switch (type) {
+            case 'pre':
+                pageIndex--;
+                // console.log();
+                break;
+            case 'next':
+                pageIndex++;
+                break;
+            default:
+                break;
+        }
+        $scope.param.pageIndex = pageIndex;
+        // 获取数据
+        $scope.getNews();
+    }
+    // console.log(PagesService);
+}]);
+//indexbanner
+myApp.directive('banner', ['$timeout', function ($timeout) {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+                // console.log('aa');
+                var swiper1 = new Swiper('.banner', {
+                    // autoplay:2000,
+                    pagination: '.banner .swiper-pagination',
+                    paginationClickable: true,
+                    nextButton: '.banner .swiper-button-next',
+                    prevButton: '.banner .swiper-button-prev',
+                    parallax: true,
+                    speed: 600
+                });
+            }, 500)
+
+        }
+    }
+}])
+//
+myApp.directive('addClass', ['$timeout', function ($timeout) {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+                $('.left_center .categories').find('.ss').addClass('current');
+            }, 200);
+        }
+    }
+}])
+//添加滚动监听指令
+myApp.directive('introNew', ['$timeout', function ($timeout) {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+
+                //滚动监听
+                $('.scrolls').on('scrollSpy:enter', function () {
+                    $(this).addClass('enterfade');
+                });
+                $('.scrolls').on('scrollSpy:exit', function () {
+                    $(this).removeClass('enterfade');
+                });
+                $('.scrolls').scrollSpy();
+            }, 500)
+        }
+    }
+}])
+myApp.directive('imgLazy', ['$timeout', function ($timeout) {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+                $("img").lazyload({
+                    effect: "fadeIn",
+                    threshold: 80
+                });
+            }, 300);
+            // (function (i, s, o, g, r, a, m) {
+            //     i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            //         (i[r].q = i[r].q || []).push(arguments)
+            //     }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            //         m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            // })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+            // ga('create', 'UA-80247497-2', 'auto');
+            // ga('send', 'pageview');
+            // var _hmt = _hmt || [];
+            // (function () {
+            //     var hm = document.createElement("script");
+            //     hm.src = "hm.baidu.com/hm.js"/*tpa=https://hm.baidu.com/hm.js?89b44a502b9985ffd820e27f4fa4a314*/;
+            //     var s = document.getElementsByTagName("script")[0];
+            //     s.parentNode.insertBefore(hm, s);
+            // })();
+        }
+    }
+}])
+
+myApp.factory('fileReader', ["$q", "$log", function ($q, $log) {
+    var onLoad = function (reader, deferred, scope) {
+        return function () {
+            scope.$apply(function () {
+                deferred.resolve(reader.result);
+            });
+        };
+    };
+    var onError = function (reader, deferred, scope) {
+        return function () {
+            scope.$apply(function () {
+                deferred.reject(reader.result);
+            });
+        };
+    };
+    var getReader = function (deferred, scope) {
+        var reader = new FileReader();
+        reader.onload = onLoad(reader, deferred, scope);
+        reader.onerror = onError(reader, deferred, scope);
+        return reader;
+    };
+    var readAsDataURL = function (file, scope) {
+        var deferred = $q.defer();
+        var reader = getReader(deferred, scope);
+        reader.readAsDataURL(file);
+        return deferred.promise;
+    };
+    return {
+        readAsDataUrl: readAsDataURL
+    };
+}]);
+//新闻页面时间处理
+myApp.filter('dateParse', ['PagesService', function (PagesService) {
+    return function (data) {
+        if (data) {
+            data = data.toString().replace(/\/Date\(([-]?\d+)\)\//gi, "$1");
+            data = PagesService.getTimeDetail(data);
+            return data;
+        }
+    };
+}]);
+//santize文章详情页面解析html标签
+myApp.filter('trustHtml', ['$sce', function ($sce) {
+    return function (input) {
+        return $sce.trustAsHtml(input);
+    }
+}]);
+//入金时间处理
+myApp.filter('dataRuji', function () {
+    return function (value) {
+        var vca = value.split('.');
+        // console.log(vca[0]);
+        return vca[0].replace('T', ' ');
+    }
+});
+//去掉空格
+myApp.filter('TrimNum', function () {
+    return function (value) {
+        var result;
+        result = value.replace(/(^\s+)|(\s+$)/g,"");
+        result = result.replace(/\s/g,"");
+        return result;
+    }
+});
+//时间处理
+myApp.directive('dateChoice', function () {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            // WdatePicker();
+            $(element).on('focus', function () {
+                // console.log('click');
+                WdatePicker();
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', maxDate: GetDateStr(-1) })
+                scope.$apply();//根性数据
+                // console.log(scope.orderdata);
+            })
+        }
+    }
+})
+//头部样式处理
+myApp.directive('heas', function () {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            var urlss = location.href;
+            if ($(window).scrollTop() == 0 && (urlss.indexOf('business') > 0 || urlss.indexOf('/index') > 0)) {
+                $("header").removeClass("slide-header");
+                $("header").fadeIn(300);
+                // $(".r-fixed").addClass('ani');
+                $(".sub-menu").addClass('sub-index');
+            }
+        }
+    }
+})
+myApp.directive('dateDirective', ['$timeout', function ($timeout) {
+    return {
+        scope: {
+            dateDirective: '=',
+            dirData: '=',
+            diLanguage: '='
+        },
+        restrict: 'AE',
+        link: function (scope, element, attrs) {
+            // require(['jedate'],function() {
+            var self = $(element);
+            var config = self.attr('data-config');
+            config = angular.fromJson(config);
+            self.on('mouseenter', function (e) {
+                var lang = $(element).attr('language');
+                if (!e.target.id) {
+                    var date = new Date();
+                    var time = date.getTime();
+                    var dateId = 'date' + time;
+                    e.target.id = dateId;
+                } else {
+                    var dateId = e.target.id;
+                }
+                if (lang == 'en') {
+                    var lan = {
+                        name: "en",
+                        month: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+                        weeks: ["SUN", "MON", "TUR", "WED", "THU", "FRI", "SAT"],
+                        times: ["Hour", "Minute", "Second"],
+                        clear: "Clear",
+                        today: "Today",
+                        yes: "set",
+                        close: "Close"
+                    };
+                } else {
+                    var lan = {
+                        name: "cn",
+                        month: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+                        weeks: ["日", "一", "二", "三", "四", "五", "六"],
+                        times: ["小时", "分钟", "秒数"],
+                        clear: "清空",
+                        today: "今天",
+                        yes: "确定",
+                        close: "关闭"
+                    };
+                }
+                var data = {
+                    language: lan,
+                    isinitVal: false,
+                    festival: true,
+                    dateCell: '#' + dateId,
+                    trigger: "click focus",
+                    isTime: false,
+                    ishmsVal: false,
+                    minDate: undefined,
+                    maxDate: undefined,
+                    format: "YYYY-MM-DD",
+                    zIndex: 3000,
+                    choosefun: function (elem, val) {
+                        // console.log(val);
+                        scope.dirData = val;
+                        if ($('#forms').length > 0) {
+                            $('#forms #birthday').valid();
+                            // $('#forms').valid();
+                        }
+                        // console.log($("#forms"));
+                        scope.$apply();
+                    },     //选中日期后的回调
+                    okfun: function (elem, val) {
+                        // alert(elem);
+                        scope.dirData = val;
+                        if ($('#forms').length > 0) {
+                            // $('#forms').valid();
+                            $('#forms #birthday').valid();
+                        }
+                        scope.$apply();
+                    }
+                };
+                // var data={
+                //     isinitVal:true,
+                //     dateCell:'#'+dateId,
+                //     isTime:true,
+                //     format:'YYYY-MM-DD',
+                //     // format:'YYYY-MM-DD hh:mm:ss',
+                //     festival:false,
+                //     choosefun:function(val) {
+                //         //  $('#'+dateId).html('');
+                //         scope.dirData = val;
+                //         if($('#forms').length>0){
+                //             $('#forms').valid();
+                //         }
+                //         // console.log($("#forms"));
+                //         scope.$apply();
+                //     },     //选中日期后的回调
+                //     clearfun:function(val) {
+                //         //  $('#'+dateId).html('');
+                //         scope.dirData = '';
+                //         if($('#forms').length>0){
+                //             $('#forms').valid();
+                //         }
+                //         scope.$apply();
+                //     },      //清除日期后的回调
+                //     okfun:function(val) {
+                //         scope.dirData = val;
+                //         if($('#forms').length>0){
+                //             $('#forms').valid();
+                //         }
+                //         scope.$apply();
+                //     }
+                // }
+                // $timeout(function(){
+                $('#' + dateId).jeDate(data);
+                // },500);
+                // scope.$apply();
+            })
+            // })
+        }
+    }
+}]);
+//获取汇率
+myApp.directive('changeRate', function () {
+    return {
+        restrict: "AE",
+        scope: {
+            chrData: '=',
+            matrixPost: '='
+        },
+        link: function (scope, element, attrs) {
+            // console.log('change');
+            var data = scope.chrData;
+            var isdeposit = $(element).attr('isdeposit');
+            function GetRate() {
+                if(isdeposit){
+                    var url = '/MyInfo/GetExchangeRateByLater';
+                }else{
+                    url = '/MyInfo/GetExchangeRate';
+                }
+                var money = $(element).attr('data-money');
+                scope.matrixPost(false, url, '', function (res) {
+                    // alert('密码错误');
+                    if (res.Success) {
+                        data.Rate = res.Data;
+                        // change(money, res.Data);
+                    } else {
+                        alert('获取数据失败，请刷新或联系客服');
+                    }
+                });
+            };
+            GetRate();
+            $(element).on('input', function () {
+                console.log('sdf');
+                if (!data.Rate) {
+                    GetRate();
+                }
+                var money = $(element).attr('data-money');
+                // GetRate();
+                change(money,data.Rate);
+            })
+            function change(type, Rate) {
+                switch (type) {
+                    case 'USDmoney':
+                        
+                            if(data.USDmoney){
+                                data.CNYmoney = (parseFloat(data.USDmoney)*parseFloat(Rate)).toFixed(2);
+                            }  
+                       
+                        break;
+                    case 'CNYmoney':
+                    
+                            if(data.CNYmoney){
+                                data.USDmoney = (parseFloat(data.CNYmoney)/parseFloat(Rate)).toFixed(2);
+                            }
+                         
+                        break;
+                }
+                // scope.$apply();
+                scope.$digest();
+                console.log(data);
+            }
+        }
+    }
+});
+//图片上传
+myApp.directive('fileUpload', ['$parse', 'fileReader', function ($parse, fileReader) {
+    return {
+        restrict: 'AE',
+        scope: {
+            dirData: '=',
+            fileUpload: '='
+        },
+        link: function (scope, element, attrs) {
+            var eleBindEvent = function (data) {
+                var self = $(element);
+                var config = $(element).attr('data-config');
+                config = JSON.parse(config) || {};
+                var triggerCls = self.find(config.triggerCls).length > 0 ? self.find(config.triggerCls) : self.siblings(config.triggerCls);
+                var fileClass = self.find(config.fileClass).length > 0 ? self.find(config.fileClass) : self.siblings(config.fileClass);
+                // console.log(fileClass);
+                fileClass.unbind('change').bind('change', function (event) {
+                    var file = (event.srcElement || event.target).files[0];
+                    var lang = $(element).attr('language');
+                    // console.log(file);
+                    if (file && file.type.indexOf('image') >= 0 && (file.type.indexOf('jpg') >= 0 || file.type.indexOf('png') >= 0 || file.type.indexOf('jpeg') >= 0)) {
+                        //if(file&&file.type.indexOf('image')>=0){
+
+                        getfile(file, data, config);
+                    } else {
+                        // console.log(lang);
+                        if (lang == 'en') {
+                            alert('Please upload jpg, png, jpeg format images');
+                        } else {
+                            alert('请上传jpg、png、jpeg格式的图片');
+                        }
+                        scope.dirData = '';
+                        scope.$apply();
+                        // alert('请上传jpg、png、jpeg、gif格式的图片');
+                    }
+                });
+                triggerCls.unbind('click').bind('click', function (event) {
+                    event.preventDefault();
+                    fileClass.click();
+                });
+            }
+            var getfile = function (file, data, config) {
+                var lang = $(element).attr('language');
+                var Path = window.URL.createObjectURL(file);
+                var maxSize = 6 * 1024 * 1024; //1M大小
+                if (file.size > maxSize) {
+                    if (lang == 'en') {
+                        alert('Image can not exceed 6M at maximum');
+                    } else {
+                        alert('图片最大不能超过6M');
+                    }
+                    return false;
+                }
+                scope.fileUpload.uploadImgNocrop(config, Path, file);
+                // fileClass.val("");
+                /*fileReader.readAsDataUrl(file, scope)
+                 .then(function(result) {
+                 console.log(result);
+                 });*/
+            }
+            eleBindEvent();
+
+        }
+    };
+}]);
+myApp.directive('valid', function () {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            // console.log($('#form'))
+            var self = $(element).attr('id');
+            $('#' + self).validate();
+            // console.log(self);
+        }
+    }
+})
+//出入金管理效果
+// myApp.directive('moves', function () {
+//     return {
+//         restrict: "AE",
+//         // link: function (scope, element, attrs) {
+//         //     $timeout(function(){
+//         //         heihei();
+//         //     },500);
+//         //     $(element).find('li').on('mouseenter',function(){
+//         //         var moveli = element.find('.movediv');
+//         //         var activeli = $(this);
+//         //         var width = activeli.width();
+//         //         var left =activeli.position().left;
+//         //         moveli.css({
+//         //             'left':left,
+//         //             'width':width
+//         //         });
+//         //         moveli=null;activeli=null;width=null;left=null;
+//         //     });
+//         //     $(element).on('mouseleave',function(){
+//         //         heihei();
+//         //     });
+//         //     function heihei(){
+//         //         var widths = element.find('.active').width();
+//         //         var lefts =element.find('.active').position().left;
+//         //         element.find('.movediv').css({
+//         //             'left':lefts,
+//         //             'width':widths
+//         //         });
+//         //         lefts=null;widths=null;
+//         //     }
+//         // }
+//         link: function (scope, element, attrs) {
+//             var move = function(){
+//                 console.log('dfd');
+//                 $(element).find('.current');
+//                 // getComputedStyle
+//                 // var $_width = $(element).find('.current').css('width');
+//                 var $_width = element.getComputedStyle('.current');
+//                 console.log($_width);
+//             }
+//             move();
+//         }
+//     }
+// })
+myApp.directive('swiper', ['$timeout', function ($timeout) {
+    return {
+        restrict: "AE",
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+                var swiper = new Swiper('.area-box .swiper-container', {
+                    autoplay: 2500,
+                    pagination: '.area-box .swiper-pagination',
+                    paginationClickable: true,
+                    nextButton: '.area-box .swiper-button-next',
+                    prevButton: '.area-box .swiper-button-prev',
+                    parallax: true,
+                    speed: 600
+                });
+            }, 500)
+        }
+    }
+}]);
+//盈利报告处理
+myApp.directive('repotData', function () {
+    return {
+        restrict: "AE",
+        scope: {
+            chrData: '='
+        },
+        link: function (scope, element, attrs) {
+            // console.log(scope.chrData);
+            var losscount = scope.chrData.losscount;
+            var wincount = scope.chrData.wincount;
+            var tradecount = scope.chrData.tradecount;
+            scope.chrData['profitCount'] = Math.round(wincount / tradecount * 10000) / 100;
+            scope.chrData['lossCount'] = Math.round(losscount / tradecount * 10000) / 100;
+            scope.chrData['times'] = scope.chrData.starttime + '-' + scope.chrData.endtime;
+
+
+            // 盈利（profit）
+            // 时间（starttime-endtime）
+            // 交易次数（tradecount）
+            // 盈利次数（wincount/tradecount*100,保留2位小数）
+            // 盈亏次数（losscount/tradecount*100,保留2位小数）
+            // 最大手数（maxlots）
+            // 最大持仓时间（maxTIme）
+            // 最大盈利（maxprofit）
+            // 最大亏损（maxloss）
+        }
+    }
+});
+// myApp.filter("translate", ['$translate', function($translate) {
+//     return function(key) {
+//         if(key){
+//             console.log($translate);
+//             console.log(key);
+//             console.log($translate.instant(key));
+//             return $translate.instant(key);
+//
+//         }
+//     };
+// }]);
+// })
+myApp.run(['formlyConfig', '$window', '$http', '$rootScope', 'Upload', function (formlyConfig, $window, $http, $rootScope, Upload) {
+    // Put types in here.
+    formlyConfig.setType({
+        name: 'customUpload',
+        //extends: 'input',
+        template: "<label language=\"{{Language}}\" class=\"cardnagit\"> <span ng-if=\"!model[options.key]\" class=\"cardshow_b\">{{'70031' | translate}}</span> <img ng-if=\"model[options.key]\"  class=\"imgas\" ng-src=\"{{$root.SimpleUrl+model[options.key]}}\"> <input style=\"opacity: 0;\"  type=\"file\" ng-model=\"model[options.key]\"></label>",
+        // template: "<input type=\"file\" ng-model=\"model[options.key]\"><img ng-src=\"{{model[options.key]?$root.SimpleUrl+model[options.key]:''}}\" width=\"100%\" >",
+        wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+        link: function (scope, el, attrs) {
+            el.on("change", function (changeEvent) {
+                var file = changeEvent.target.files[0];
+                if (file) {
+                    var upload = scope.options && scope.options.templateOptions && scope.options.templateOptions.upload ?
+                        scope.options.templateOptions.upload :
+                        function (key, file, setViewValue) {
+                            var _data = new FormData();
+                            _data.append("file", file);
+                            //Copy from ./app/controllers/account.js
+                            //require(['upload', 'uploadshim'], function () {
+                            //    myApp.useModule("ngFileUpload");
+                            //var Upload = myApp.get('Upload');
+                            var url = $rootScope.SimpleUrl + '/IBWebApi/WebLogin/UpLoadImage';
+                            // console.log(config);
+                            // return false;
+                            Upload.upload({
+                                //服务端接收
+                                url: url,
+                                file: file,
+                                headers: {
+                                    'Content-Language': $rootScope.Language
+                                }
+                            }).progress(function (evt) {
+                                //进度条
+                                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                            }).success(function (callbackData) {
+                                // console.log(callbackData);
+                                $rootScope.loading = false;
+                                // $('#forms').valid();
+                                if (callbackData.Success) {
+
+                                    setViewValue(callbackData.Data);
+
+                                    alert($rootScope.message[$rootScope.Language].success);
+                                    // $(config.shows).attr('src','http://192.168.3.200:8012/'+callbackData.Data)
+                                    // $scope.getimglist();
+                                } else {
+                                    alert(callbackData.Message);
+                                }
+                            }).error(function (data, status, headers, config) {
+                                console.log(error);
+                                alert($rootScope.message[$rootScope.Language].getError);
+                                $rootScope.loading = false;
+                            });
+                            //});
+                        };
+                    upload(scope.options.key, file, scope.fc.$setViewValue);
+                } else {
+                    scope.fc.$setViewValue(undefined);
+                }
+            });
+            el.on("focusout", function (focusoutEvent) {
+                // dont run validation , user still opening pop up file dialog
+                if ($window.document.activeElement.id === scope.id) {
+                    // so we set it untouched
+                    scope.$apply(function (scope) {
+                        scope.fc.$setUntouched();
+                    });
+                } else {
+                    // element losing focus so we trigger validation
+                    scope.fc.$validate();
+                }
+            });
+
+        },
+        defaultOptions: {
+            templateOptions: {
+                //type: 'file',
+                //required: true
+            }
+        }
+    });
+}]);
+myApp.run(['formlyConfig', function (formlyConfig) {
+    //http://angular-formly.com/#/example/integrations/ui-datepicker
+
+    // var attributes = [
+    //     'date-disabled',
+    //     'custom-class',
+    //     'show-weeks',
+    //     'starting-day',
+    //     'init-date',
+    //     'min-mode',
+    //     'max-mode',
+    //     'format-day',
+    //     'format-month',
+    //     'format-year',
+    //     'format-day-header',
+    //     'format-day-title',
+    //     'format-month-title',
+    //     'year-range',
+    //     'shortcut-propagation',
+    //     'datepicker-popup',
+    //     'show-button-bar',
+    //     'current-text',
+    //     'clear-text',
+    //     'close-text',
+    //     'close-on-date-selection',
+    //     'datepicker-append-to-body'
+    // ];
+    //
+    // var bindings = [
+    //     'datepicker-mode',
+    //     'min-date',
+    //     'max-date'
+    // ];
+    //
+    // var ngModelAttrs = {};
+    //
+    // angular.forEach(attributes, function (attr) {
+    //     ngModelAttrs[camelize(attr)] = { attribute: attr };
+    // });
+    //
+    // angular.forEach(bindings, function (binding) {
+    //     ngModelAttrs[camelize(binding)] = { bound: binding };
+    // });
+    //
+    // console.log(ngModelAttrs);
+
+    formlyConfig.setType({
+        name: 'datepicker',
+        template: '<input language=\"{{Language}}\" autocomplete=\"off\" required data-msg-required=\"{{Language==\'en\'?\'*the file is required\':\'*不能为空\'}}\" id=\"dates\" name=\"birth\" date-directive=\"timeOption\" value=\"model[options.key]\" dir-data=\"model[options.key]\" type=\"text\" ng-model=\"model[options.key]\" class=\"Wdate\" />',
+        wrapper: ['bootstrapLabel', 'bootstrapHasError']
+        //   name: 'datepicker',
+        //   template: '<p class="input-group">\
+        //   <input  type="text"\
+        //           id="{{::id}}"\
+        //           name="{{::id}}"\
+        //           ng-model="model[options.key]"\
+        //           class="form-control"\
+        //           ng-click="datepicker.open($event)"\
+        //           uib-datepicker-popup="{{to.datepickerOptions.format}}"\
+        //           is-open="datepicker.opened"\
+        //           datepicker-options="to.datepickerOptions" />\
+        //   <span class="input-group-btn">\
+        //       <button type="button" class="btn btn-default" ng-click="datepicker.open($event)" ng-disabled="to.disabled"><i class="glyphicon glyphicon-calendar"></i></button>\
+        //   </span>\
+        // </p>',
+        //   wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+        //   defaultOptions: {
+        //       ngModelAttrs: ngModelAttrs,
+        //       templateOptions: {
+        //           datepickerOptions: {
+        //               //format: 'MM.dd.yyyy',
+        //               initDate: new Date()
+        //           }
+        //       }
+        //   },
+        //   controller: ['$scope', function ($scope) {
+        //
+        //       $scope.datepicker = {};
+        //
+        //       $scope.$watch('model', function modelWatcher(newModelValue) {
+        //           var currentModelVal = $scope.model[$scope.options.key];
+        //           if (typeof (currentModelVal) == 'string') {
+        //               $scope.model[$scope.options.key] = new Date(currentModelVal);
+        //           }
+        //       }, true);
+        //
+        //       $scope.datepicker.opened = false;
+        //
+        //       $scope.datepicker.open = function ($event) {
+        //           $scope.datepicker.opened = !$scope.datepicker.opened;
+        //       };
+        //   }]
+    });
+
+    // function camelize(string) {
+    //     string = string.replace(/[\-_\s]+(.)?/g, function (match, chr) {
+    //         return chr ? chr.toUpperCase() : '';
+    //     });
+    //     // Ensure 1st char is always lowercase
+    //     return string.replace(/^([A-Z])/, function (match, chr) {
+    //         return chr ? chr.toLowerCase() : '';
+    //     });
+    // }
+}]);
+myApp.run(['formlyConfig', function (formlyConfig) {
+    formlyConfig.setWrapper([
+        {
+            name: 'bootstrapLabel',
+            template: '<div class="fm-section">\
+    <label for="{{id}}" class="fm-label {{to.labelSrOnly ? \'sr-only\' : \'\'}}" ng-if="to.label">\
+        {{to.label}}\
+        {{to.required ? \'* \' : \'\'}}\
+    </label>\
+    <div class="fm-control">\
+        <formly-transclude></formly-transclude>\
+    </div>\
+</div>',
+            apiCheck: function apiCheck(check) {
+                return {
+                    templateOptions: {
+                        label: check.string.optional,
+                        required: check.bool.optional,
+                        labelSrOnly: check.bool.optional
+                    }
+                };
+            }
+        },
+        {
+            name: 'bootstrapHasError',
+            template: '<div class="" ng-class="{\'has-error\': showError}">\
+  <formly-transclude></formly-transclude>\
+</div>'
+        }]);
+}]);
+
+
