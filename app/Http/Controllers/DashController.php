@@ -119,7 +119,7 @@ class DashController extends Controller
         //send email
         try {
         $admin = New User;
-        $admin->email = "maxwell@alpha-corelabs.com";
+        $admin->email = "deposit@neptunefx.net";
         $admin->name = "NeptuneFX";
         $admin->notify(new DepositSubmitted());
 
