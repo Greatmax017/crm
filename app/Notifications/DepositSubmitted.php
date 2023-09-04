@@ -42,7 +42,7 @@ class DepositSubmitted extends Notification
     {
         return (new MailMessage)
                     ->line('New deposit notification.')
-                    ->action('A new deposit is available for auditing', url('/admin/transactions'))
+                    ->action('A new deposit is available for auditing', url('https://crm.neptunefx.net/admin/transactions'))
                     ->line('Thank you ');
     }
 

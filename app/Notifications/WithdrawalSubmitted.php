@@ -42,7 +42,7 @@ class WithdrawalSubmitted extends Notification
     {
         return (new MailMessage)
                     ->line('New withdrawal submitted')
-                    ->action('view now', url('/admin/withdrawals'));
+                    ->action('view now', url('https://crm.neptunefx.net/admin/withdrawals'));
     }
 
     /**
