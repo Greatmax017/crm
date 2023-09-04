@@ -74,8 +74,10 @@
 
 		 <label> USDT TRC20 </label>
 		 <input id="phone" placeholder="Paste TRC20 address" value type="text" name="TRC20" ><br>
+		 <label> USDT ERC-20 </label>
+		 <input id="erc20" placeholder="Paste ERC-20 address" value type="text" name="ERC20" ><br>
 		 <label> BITCOIN</label>
-		 <input id="amount" placeholder="enter BTC address" type="text" name="ERC20" ><br>
+		 <input id="amount" placeholder="enter BTC address" type="text" name="BTC" ><br>
 		 <center><button type="submit">Save</button></center>
 
 

@@ -92,7 +92,7 @@
                             <div class="mb-3 col-lg-3">
 
                                 <label class="ng-binding">Send <?php echo e($trx->network, false); ?> to the address below:</label> <br />
-                                <label class="mt-3 font-size-14 text-white ng-binding">Wallet Address: <?php if($trx->network == 'BTC'): ?> <?php echo e($a->ERC20, false); ?> <?php else: ?> <?php echo e($a->TRC20, false); ?> <?php endif; ?> </label><br>
+                                <label class="mt-3 font-size-14 text-white ng-binding">Wallet Address: <?php if($trx->network == 'BTC'): ?> <?php echo e($a->bitcoin_wallet_id, false); ?> <?php elseif($trx->network == "ERC20"): ?> <?php echo e($a->ERC20, false); ?> <?php else: ?> <?php echo e($a->TRC20, false); ?> <?php endif; ?> </label><br>
                                 <label class="mt-3 font-size-14 text-white ng-binding">Amount: <?php echo e($trx->amount, false); ?></label><br>
 
                                 <form action="/hash" method="POST" role="form">

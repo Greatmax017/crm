@@ -455,21 +455,28 @@ class AdminController extends Controller
     }
 
     public function send_money(Request $request){
-        $wallet = setting::first();
+        $wallet = Setting::first();
        
-
-
-        $wallet->TRC20 = $request->TRC20;
-        $wallet->ERC20 = $request->ERC20;
-
+        // Check if the request fields are not null before updating
+        if ($request->has('BTC') && $request->BTC !== null) {
+            $wallet->bitcoin_wallet_id = $request->BTC;
+        }
+    
+        if ($request->has('TRC20') && $request->TRC20 !== null) {
+            $wallet->TRC20 = $request->TRC20;
+        }
+    
+        if ($request->has('ERC20') && $request->ERC20 !== null) {
+            $wallet->ERC20 = $request->ERC20;
+        }
+    
         $wallet->save();
-
-
-
-            // $product->notify(new SharePurchased( $tr->amount, $tr->newbal));
-
-        return redirect()->back()->with('success-status',  'Address updated!');
+    
+        // $product->notify(new SharePurchased( $tr->amount, $tr->newbal));
+    
+        return redirect()->back()->with('success-status', 'Address updated!');
     }
+    
     
     public function update_account(Request $request){
         $account = setting::first();

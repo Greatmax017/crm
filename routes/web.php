@@ -47,6 +47,7 @@ Route::get('/ApplyWithdrawals', 'DashController@ApplyWithdrawals');
 Route::get('/payoptions', 'DashController@payoptions');
 Route::get('/usdpayamount', 'DashController@usdpayamount');
 Route::get('/usdtpayamount', 'DashController@usdtpayamount');
+Route::get('/ercpayamount', 'DashController@ercpayamount');
 Route::get('/record', 'DashController@record');
 Route::get('/withrecord', 'DashController@withrecord');
 Route::get('/Accountset', 'DashController@Accountset');

@@ -127,6 +127,7 @@ class DashController extends Controller
         catch(Exception $e) {
             info("Error: ". $e->getMessage());
         }
+       
         return redirect('/erc20payaddress');
     }
      public function hash(Request $request){
@@ -307,6 +308,11 @@ public function usdtpayamount(){
         
     return view('usdtpayamount', ['user' => $user]);
 }
+public function ercpayamount(){
+    $user = Auth::user();
+        
+    return view('ercpayamount', ['user' => $user]);
+}
 
 public function fiat($id){
     $user = Auth::user();
@@ -335,6 +341,8 @@ public function erc20payaddress(){
         
     return view('erc20payaddress', ['user' => $user, 'a' => $a, 'trx' => $trx]);
 }
+
+
 
 public function fiataddress(){
     $user = Auth::user();

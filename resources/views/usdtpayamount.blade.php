@@ -100,7 +100,7 @@
                              &amp;&amp; deposit.moneyType!=&#39;otcpaysdigital_DOGE-COIN&#39;" class="ng-scope">
                             <div class="mb-3 col-lg-3">
 
-                                <label class="ng-binding">Amount（USD）</label>
+                                <label class="ng-binding">Amount（USDT）</label>
                                 <input required="" ng-keyup="" data-msg-required="This field is required" autocomplete="off" chr-data="deposit" matrix-post="matrixPost" data-money="USDmoney" name="amount" class="form-control ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" data-rule-monneys="true" data-msg-monneys="Wrong format">
                                 <input type="hidden" name="network" value="TRC20">
                             </div>

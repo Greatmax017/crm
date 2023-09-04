@@ -93,6 +93,27 @@
                         </div>
                     </div>
                     </a>
+                </div>
+                <!-- end ngRepeat: pay in resData | filter:filterChannelType -->
+                <div class="col-xxl-2 col-lg-3 col-md-4 ng-scope" ng-repeat="pay in resData | filter:filterChannelType">
+                    <div class="row">
+                    <a href="/ercpayamount">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="credit-card otcpays-method" ng-click="">
+                                <div class="type-brand">
+                                    <h4 class="ng-binding">USDT-ERC20</h4>
+                                    <img src="imgs/erc20.png" alt="">
+                                </div>
+                                <div class="cc-holder-exp">
+                                    <h5><input class="radios ng-pristine ng-untouched ng-valid ng-empty" type="radio" value="otcpaysaud" name="Moneytype" id="otcpaysaud_radio" ng-model="deposit.moneyType"></h5>
+                                    <h6 class="ng-binding">Otcpays</h6>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                
+                
                 </div><!-- end ngRepeat: pay in resData | filter:filterChannelType -->
                 <div class="col-xxl-2 col-lg-3 col-md-4 ng-scope" ng-repeat="pay in resData | filter:filterChannelType">
                     <div class="row">
