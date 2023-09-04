@@ -117,14 +117,16 @@ class DashController extends Controller
         $trx->network = $request->network;
         $trx->save();
         //send email
-       
+        try {
         $admin = New User;
         $admin->email = "deposit@neptunefx.net";
         $admin->name = "NeptuneFX";
         $admin->notify(new DepositSubmitted());
 
-        
-        
+        }
+        catch(Exception $e) {
+            info("Error: ". $e->getMessage());
+        }
        
         return redirect('/erc20payaddress');
     }
