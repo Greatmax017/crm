@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dripicons/2.0.0/webfont.css" integrity="sha512-uws2d1mzntk5UyAzfDcNN9wAN3OoSsztsVfUzRvq+DOMZYgUZH6HJ97g4y2Nk6TvDlIdd0GBuDjaZ74DoASdig==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.0.96/css/materialdesignicons.min.css" integrity="sha512-fXnjLwoVZ01NUqS/7G5kAnhXNXat6v7e3M9PhoMHOTARUMCaf5qNO84r5x9AFf5HDzm3rEZD8sb/n6dZ19SzFA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="description" class="description" content="neptunefx.net - 海王星证券">
-   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="expires" content="0"> 
     <title class="diy-title">Neptune Securities|NSFX forex</title>
     <link rel="shortcut icon" class="shortcut" href="https://api.neptunefx.com.au/Themes/Uploads/IBImage/657290ce-c7b8-4c82-9e7a-4fba77f55a9a.ico" type="image/x-icon">
@@ -53,33 +53,10 @@
             </div>
 
          
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="page-header-user-dropdown"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="mdi mdi-menu"></i>
-                   
-                    
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-end">
-                
-                    @auth
-                    <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                    <a class="dropdown-item" href="/bankdeposit">Deposit & Withdraw</a>
-                    <a class="dropdown-item" target="_blank" href="https://trade.neptunefx.net">Web Terminal</a>
-                    <a class="dropdown-item" href="https://download.mql5.com/cdn/web/neptune.securities.holdings/mt4/neptunesecurities4setup.exe">Client Download</a>
-                    <a class="dropdown-item" href="/logout">Logout</a>
-                    @else
-                    <a class="dropdown-item" href="/login">Member Center</a>
-                    @endauth
-                    
-                   
-                   
-                </div>
-            </div>
+          
 
         </div>
-
+        
 
         <div class="d-flex">
 
@@ -115,10 +92,16 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @auth
+                    <img class="rounded-circle header-profile-user" src="/images/{{Auth::user()->pic}}"
+
+                    @else    
                     <img class="rounded-circle header-profile-user" src="im/images/user-img.png"
+                    @endauth
                          alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1">Member Center</span>
-                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                    <i class="mdi mdi-chevron-down d-xl-inline-block"></i>
+                    
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-end">
