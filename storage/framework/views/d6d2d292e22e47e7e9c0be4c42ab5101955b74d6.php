@@ -108,6 +108,7 @@
                 
                     <?php if(auth()->guard()->check()): ?>
                     <a class="dropdown-item" href="/dashboard">Dashboard</a>
+			<a class="dropdown-item" href="https://trade.neptunefx.net">Web Terminal</a>
                     <a class="dropdown-item" href="/bankdeposit">Deposit & Withdraw</a>
                     <a class="dropdown-item" href="/Kyc">KYC</a>
                     <a class="dropdown-item" href="https://download.mql5.com/cdn/web/neptune.securities.holdings/mt4/neptunesecurities4setup.exe">Client Download</a>
