@@ -42,25 +42,25 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-pills nav-justified" role="tablist">
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link active" data-bs-toggle="tab" href="https://crm.neptunefx.com.au/#/center/manage/BankDeposit" role="tab" ui-sref-active="active" ui-sref="center.manage.BankDeposit">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#" role="tab" ui-sref-active="active" ui-sref="center.manage.BankDeposit">
                                 <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
                                 <span class="d-none d-sm-block ng-binding">Deposit</span>
                             </a>
                         </li>
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link" data-bs-toggle="tab" href="https://crm.neptunefx.com.au/#/center/manage/ApplyWithdrawals" role="tab" ui-sref-active="active" ui-sref="center.manage.ApplyWithdrawals">
+                            <a class="nav-link" data-bs-toggle="tab" href="#" role="tab" ui-sref-active="active" ui-sref="center.manage.ApplyWithdrawals">
                                 <span class="d-block d-sm-none"><i class="fas fa-piggy-bank"></i></span>
                                 <span class="d-none d-sm-block ng-binding">Apply For Withdrawal</span>
                             </a>
                         </li>
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link" data-bs-toggle="tab" href="https://crm.neptunefx.com.au/#/center/manage/RefundRecords" role="tab" ui-sref-active="active" ui-sref="center.manage.RefundRecords">
+                            <a class="nav-link" data-bs-toggle="tab" href="#" role="tab" ui-sref-active="active" ui-sref="center.manage.RefundRecords">
                                 <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
                                 <span class="d-none d-sm-block ng-binding">Withdraw Records</span>
                             </a>
                         </li>
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link" data-bs-toggle="tab" href="https://crm.neptunefx.com.au/#/center/manage/PaymentRecords" role="tab" ui-sref-active="active" ui-sref="center.manage.PaymentRecords">
+                            <a class="nav-link" data-bs-toggle="tab" href="#" role="tab" ui-sref-active="active" ui-sref="center.manage.PaymentRecords">
                                 <span class="d-block d-sm-none"><i class="fas fa-envelope"></i></span>
                                 <span class="d-none d-sm-block ng-binding">Deposit  Records</span>
                             </a>

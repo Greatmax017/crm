@@ -75,7 +75,7 @@
 												</td>
 												<td class="col-md-2">
 												    
-												    <a href="{{ url('/admin/user/'.$t->id) }}">{{ $t->id or "" }}</a>
+												    <a href="{{ url('/admin/user/'.$t->code) }}">{{ $t->code or "" }}</a>
 											
 												
 												

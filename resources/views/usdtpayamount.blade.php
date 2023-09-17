@@ -43,7 +43,7 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-pills nav-justified" role="tablist">
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link active" data-bs-toggle="tab" href="https://crm.neptunefx.com.au/#/center/manage/BankDeposit" role="tab" ui-sref-active="active" ui-sref="center.manage.BankDeposit">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#" role="tab" ui-sref-active="active" ui-sref="center.manage.BankDeposit">
                                 <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
                                 <span class="d-none d-sm-block ng-binding">Deposit</span>
                             </a>

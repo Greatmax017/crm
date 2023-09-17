@@ -73,7 +73,7 @@
 												</td>
 												<td class="col-md-2">
 												    
-												    <a href="<?php echo e(url('/admin/user/'.$t->id), false); ?>"><?php echo e(isset($t->id) ? $t->id : "", false); ?></a>
+												    <a href="<?php echo e(url('/admin/user/'.$t->code), false); ?>"><?php echo e(isset($t->code) ? $t->code : "", false); ?></a>
 											
 												
 												
