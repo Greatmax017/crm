@@ -22,8 +22,8 @@
             </div>
             <div class="col-sm-6">
                 <!-- ngIf: Nomt4!='nomts' --><div ng-if="Nomt4!=&#39;nomts&#39;" class="float-end d-sm-block ng-scope">
-                    <a href="" class="btn btn-success ng-binding">Deposit</a>
-                    <a href="" class="btn btn-secondary ng-binding">Withdraw</a>
+                    <a href="#" class="btn btn-success ng-binding">Deposit</a>
+                    <a href="#" class="btn btn-secondary ng-binding">Withdraw</a>
                 </div><!-- end ngIf: Nomt4!='nomts' -->
                 <!-- ngIf: Nomt4 == 'nomts' -->
 
