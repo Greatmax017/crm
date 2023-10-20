@@ -28,7 +28,7 @@
             </form>
             <div class="user-info">
                 <h5 class="mt-3 font-size-16 text-white ng-binding">{{Auth::user()->fname}}  {{Auth::user()->surname}}</h5>
-                <h5 class="mt-3 font-size-14 text-white ng-binding">MT4 Trading account：{{Auth::user()->mt4 }}</h5>
+                <!-- <h5 class="mt-3 font-size-14 text-white ng-binding">MT4 Trading account：{{Auth::user()->mt4 }}</h5> -->
                 
                  <!--<h5 class="mt-3 font-size-14 text-white ng-binding">Type: @if (Auth::user()->link == 0)Demo @else Real @endif </h5> -->
                 <h5 class="mt-3 font-size-14 text-white ng-binding">KYC vertification：{{Auth::user()->kyc}} </h5>

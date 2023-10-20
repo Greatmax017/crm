@@ -29,7 +29,7 @@
             </form>
             <div class="user-info">
                 <h5 class="mt-3 font-size-16 text-white ng-binding"><?php echo e(Auth::user()->fname, false); ?>  <?php echo e(Auth::user()->surname, false); ?></h5>
-                <h5 class="mt-3 font-size-14 text-white ng-binding">MT4 Trading account：<?php echo e(Auth::user()->mt4, false); ?></h5>
+                <!-- <h5 class="mt-3 font-size-14 text-white ng-binding">MT4 Trading account：<?php echo e(Auth::user()->mt4, false); ?></h5> -->
                 
                  <!--<h5 class="mt-3 font-size-14 text-white ng-binding">Type: <?php if(Auth::user()->link == 0): ?>Demo <?php else: ?> Real <?php endif; ?> </h5> -->
                 <h5 class="mt-3 font-size-14 text-white ng-binding">KYC vertification：<?php echo e(Auth::user()->kyc, false); ?> </h5>

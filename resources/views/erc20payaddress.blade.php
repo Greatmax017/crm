@@ -18,23 +18,6 @@
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Neptune</a></li>
                         <li class="breadcrumb-item active ng-binding">Deposit &amp; Withdraw</li>
                     </ol>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <!-- ngIf: Nomt4!='nomts' --><div ng-if="Nomt4!=&#39;nomts&#39;" class="float-end d-sm-block ng-scope">
-                    <a href="#" class="btn btn-success ng-binding">Deposit</a>
-                    <a href="#" class="btn btn-secondary ng-binding">Withdraw</a>
-                </div><!-- end ngIf: Nomt4!='nomts' -->
-                <!-- ngIf: Nomt4 == 'nomts' -->
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="container-fluid ng-scope">
-
     <div class="page-content-wrapper">
         <div class="col-xl-12">
             <div class="card">
