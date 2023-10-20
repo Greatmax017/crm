@@ -1,7 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
-@include('sections/sidemenu')
+<?php $__env->startSection('content'); ?>
+<?php echo $__env->make('sections/sidemenu', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -63,31 +61,33 @@
                     <div class="tab-content p-3 text-muted">
                         <div class="tab-pane active" id="home-1" role="tabpanel">
                             
-                            @if (session('error-status'))
+                            <?php if(session('error-status')): ?>
                                 <center>
                                 <div class="btn btn-danger">
 
                                  
-                                  <b>Error: &nbsp </b> {{ session('error-status') }}
+                                  <b>Error: &nbsp </b> <?php echo e(session('error-status'), false); ?>
+
                                 </div>
                             </div>
                             </center>
-                                @endif
+                                <?php endif; ?>
 
-                                @if (session('success-status'))
+                                <?php if(session('success-status')): ?>
                                 <center>
                                 <div class="btn btn-success">
 
                                    
-                                  {{ session('success-status') }}
+                                  <?php echo e(session('success-status'), false); ?>
+
                                 </div>
                                 </center>
                             </div>
-                        @endif
+                        <?php endif; ?>
                             <div class="table-responsive">
                                 <!-- ngIf: changType=='login' -->
                                 <form action="/linkmt" valid="" method="POST" id="form" class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" novalidate="novalidate">
-                                    @csrf
+                                    <?php echo csrf_field(); ?>
 
                                     <div class="mt-3">
                                         <label class="ng-binding">Email </label>
@@ -119,5 +119,7 @@
         </div>
     </div>
 </div></div>
-@endsection
+<?php $__env->stopSection(); ?>
 
+
+<?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
